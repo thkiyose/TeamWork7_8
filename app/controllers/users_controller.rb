@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      # redirect_to blogs_path
       redirect_to user_path(@user)
     else
       render :new
@@ -17,10 +16,9 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      flash[:notice] = 'ユーザー情報を編集しました。'
-      render :edit
+      redirect_to root_path, notice: "編集に成功しました！"
     else
-      flash.now[:notice] = 'ユーザー情報の編集に失敗しました。'
+      flash.now[:notice] = '編集に失敗しました。'
       render :edit
     end
   end
