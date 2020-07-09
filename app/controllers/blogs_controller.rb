@@ -1,6 +1,6 @@
 class BlogsController < ApplicationController
   before_action :set_blog, only: [:show, :edit, :update, :destroy]
-  before_action :ensure_correct_user, {only: [:create, :edit, :update]}
+  before_action :ensure_correct_user, {only: [:edit, :update]}
 
   # GET /blogs
   # GET /blogs.json
@@ -15,7 +15,11 @@ class BlogsController < ApplicationController
 
   # GET /blogs/new
   def new
-    @blog = Blog.new
+    if logged_in?
+      @blog = Blog.new
+    else
+      redirect_to new_session_path
+    end
   end
 
   # GET /blogs/1/edit
@@ -78,6 +82,6 @@ class BlogsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def blog_params
-      params.require(:blog).permit(:title, :content)
+      params.require(:blog).permit(:title, :content).merge(user_id: current_user.id)
     end
 end
