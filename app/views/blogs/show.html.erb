@@ -10,5 +10,12 @@
   <%= @blog.content %>
 </p>
 
-<%= link_to 'Edit', edit_blog_path(@blog) %> |
-<%= link_to 'Back', blogs_path %>
+<p>
+  <strong>ユーザー名:</strong>
+  <%= @blog.user.name %>
+</p>
+
+
+<%= link_to '削除', blog_path(@blog.id), method: :delete , data: { confirm: '本当に削除しますか?' }%>
+<%= link_to '編集', edit_blog_path(@blog) %> |
+<%= link_to '戻る', blogs_path %>

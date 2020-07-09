@@ -1,5 +1,6 @@
 class BlogsController < ApplicationController
   before_action :set_blog, only: [:show, :edit, :update, :destroy]
+  before_action :ensure_correct_user, {only: [:create, :edit, :update]}
 
   # GET /blogs
   # GET /blogs.json
@@ -28,11 +29,11 @@ class BlogsController < ApplicationController
 
     respond_to do |format|
       if @blog.save
-        format.html { redirect_to @blog, notice: 'Blog was successfully created.' }
+        format.html { redirect_to blogs_url, notice: 'Blog was successfully created.' }
         format.json { render :show, status: :created, location: @blog }
       else
         format.html { render :new }
-        format.json { render json: @blog.errors, status: :unprocessable_entity }
+        format.json { render json: blogs_url.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -58,6 +59,14 @@ class BlogsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to blogs_url, notice: 'Blog was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def ensure_correct_user
+    @blog = Blog.find_by(id:params[:id])
+    if @blog.user_id != current_user.id
+      flash[:notice] = "ログインしてください"
+      redirect_to new_session_path
     end
   end
 
