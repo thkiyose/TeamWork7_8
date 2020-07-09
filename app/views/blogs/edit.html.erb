@@ -1,6 +1,33 @@
 <h1>Editing Blog</h1>
 
-<%= render 'form', blog: @blog %>
+<%= form_with(model: @blog, local: true) do |form| %>
+  <% if @blog.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(blog.errors.count, "error") %> prohibited this blog from being saved:</h2>
 
-<%= link_to 'Show', @blog %> |
-<%= link_to 'Back', blogs_path %>
+      <ul>
+      <% @blog.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_area :content %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "更新", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<%= link_to '削除', blog_path(@blog.id), method: :delete , data: { confirm: '本当に削除しますか?' }%>
+<%= link_to '詳細', @blog %> |
+<%= link_to '戻る', blogs_path %>
